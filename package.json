@@ -1,0 +1,30 @@
+{
+  "name": "sprint2-bot-advanced-challenge",
+  "version": "1.0.0",
+  "description": "Sprint2 advanced challenge",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha tests --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/code-check/sprint2-bot-advanced-challenge.git"
+  },
+  "keywords": [
+    "mocha",
+    "chai"
+  ],
+  "author": "Givery Inc.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/code-check/sprint2-bot-advanced-challenge/issues"
+  },
+  "homepage": "https://github.com/code-check/sprint2-bot-advanced-challenge#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "ws": "^1.1.0"
+  }
+}
