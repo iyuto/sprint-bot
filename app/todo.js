@@ -1,30 +1,42 @@
 var mongoose = require('mongoose');
 
 var Todo = function(data) {
-	this.data = data;
+	this.args = data;
 }
 
 Todo.prototype.excuteCmd = function() {
-	console.log("Todo command excuted.");
+	switch (this.args[0]) {
+		case "add":
+			if (this.args[1]) return addTask(this.args);
+			else return null;
+		default:
+			return null;
+	}
 }
 
-// mongoose.connect('mongodb://localhost/todo', function(err) {
-//   if (err) { console.log(err) }
-//   else { console.log("connection success"); }
-// });
-//
-// var todo = new Todo();
-// todo.title = "testtitle";
-// todo.description = "description here.";
-// todo.save(function(err) {
-//   if (err) { console.log(err); }
-//   else { console.log("success")}
-// });
-//
-// var TodoScheme = new mongoose.Schema({
-// 	title: {type: String, require: true, unique: true},
-// 	description: {type: String, require: true}
-// });
-// mongoose.model('Todo', TodoScheme);
+function addTask(args) {
+	mongoose.connect('mongodb://localhost/todo', function(err) {
+	  if (err) console.log(err);
+	  else console.log("mongoose connection success");
+	});
+	
+	var TaskScheme = new mongoose.Schema({
+		title: {type: String, require: true, unique: true},
+		description: {type: String, require: true}
+	});
+	var Task = mongoose.model('Todo', TaskScheme);
+	
+	var task = new Task();
+	task.title = args[1];
+	task.description = args.join(" ");
+	task.save(function(err) {
+	  if (err) { console.log(err); }
+	  else { console.log("task add success")}
+	});
+	
+	return "task added."
+}
+
+
 
 module.exports = Todo;
