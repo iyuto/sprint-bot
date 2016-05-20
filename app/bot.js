@@ -1,3 +1,5 @@
+var Todo = require('./todo.js');
+
 var Bot = function(message) {
   this.message = message;
   
@@ -12,7 +14,8 @@ Bot.prototype.excuteCmd = function() {
     case "ping":
       return "pong";
     case "todo":
-      return this.todo()
+      var todo = new Todo(this.args);
+      return todo.excuteCmd();
     default:
       return null;
   }
