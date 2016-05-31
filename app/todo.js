@@ -7,8 +7,23 @@ var Todo = function(data) {
 Todo.prototype.excuteCmd = function() {
 	switch (this.args[0]) {
 		case "add":
-			if (this.args[1]) return addTask(this.args);
-			else return null;
+			if (this.args.length > 2) return addTask(this.args);
+			else {
+				console.log("引数エラー(%s)", this.args.join(" "))
+				return null;
+			}
+		case "delete":
+			if (this.args.length == 2) return deleteTask(this.args)
+			else {
+				console.log("引数エラー(%s)", this.args.join(" "))
+				return null;
+			}
+		case "list":
+			if (this.args.length == 1) return listTask()
+			else {
+				console.log("引数エラー(%s)", this.args.join(" "))
+				return null;
+			}
 		default:
 			return null;
 	}
@@ -37,6 +52,15 @@ function addTask(args) {
 	return "task added."
 }
 
+function deleteTask(args) {
+	console.log("deleteTask was called")
+	return null;
+}
+
+function listTask() {
+	console.log("listTask was called")
+	return null;
+}
 
 
 module.exports = Todo;
