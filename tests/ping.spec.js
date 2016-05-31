@@ -1,16 +1,13 @@
 var assert = require("chai").assert,
     WebSocket = require('ws'),
-    host_url = require('../config/account.json').host_url;
-
-HOST_URL = process.env.HOST_URL || host_url;
-HOST_URL = "ws://".concat(HOST_URL);
-console.log("HOST_URL", HOST_URL);
+    setWsProtocol = require('./utils').setWsProtocol,
+    host_url = process.env.HOST_URL || require('../config/account.json').host_url;
 
 describe("Chat Server",function() {
 
   var responseMessageCount = 0;
   it('Should send back pong', function(done) { 
-    var client1 = new WebSocket(HOST_URL);
+    var client1 = new WebSocket(setWsProtocol(host_url));
 
     client1.onopen = function() {
       client1.send("bot ping");
