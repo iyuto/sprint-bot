@@ -2,7 +2,8 @@
 
 var assert = require('chai').assert,
     WebSocket = require('ws'),
-    host_url = require('../config/account.json').host_url;
+    setWsProtocol = require('./utils').setWsProtocol,
+    host_url = process.env.HOST_URL || require('../config/account.json').host_url;
 
 describe('Bot todo', function() {
   this.timeout(30000);
@@ -29,7 +30,7 @@ describe('Bot todo', function() {
     var addList = forAdd.map((v) => { return v.command; });
     var deleteList = forList.map((v) => { return v.command; });
     var allcmdList = addList.concat(deleteList);
-    var tempClient = new WebSocket('ws://' + host_url);
+    var tempClient = new WebSocket(setWsProtocol(host_url));
 
     var deleteCommandList = [];
 
@@ -66,7 +67,7 @@ describe('Bot todo', function() {
 
   it('bot todo add - should return "todo added" if success', function(done) {
     var responseMessageCount = 0;
-    var client1 = new WebSocket('ws://' + host_url);
+    var client1 = new WebSocket(setWsProtocol(host_url));
     var commandToAdd = "bot todo add check1 add1";
 
     client1.onopen = function() {
@@ -88,7 +89,7 @@ describe('Bot todo', function() {
   });
 
   it('bot todo delete - should return "todo deleted" if success', function(done) {
-    var client1 = new WebSocket('ws://' + host_url);
+    var client1 = new WebSocket(setWsProtocol(host_url));
 
     client1.onopen = function() {
       client1.send("bot todo add " + forAdd[0].command + " " + forAdd[0].data);      
@@ -107,7 +108,7 @@ describe('Bot todo', function() {
 
   it('bot todo list - Response data of bot todo list should be separated with \n', function(done) {
     var commandCount = 0;
-    var client1 = new WebSocket('ws://' + host_url);
+    var client1 = new WebSocket(setWsProtocol(host_url));
     var textArray = [];
 
     forList.forEach((v) => {
