@@ -20,6 +20,7 @@ wss.on('connection', function(ws) {
     wss.clients = wss.clients.filter(function (conn, i) {
       return (conn === ws) ? false : true;
     });
+    broadcast(ws._socket._handle.fd + "が退出しました", "host");
   });
   ws.on('message', function (message) {
     broadcast(message, ws._socket._handle.fd);
@@ -27,12 +28,6 @@ wss.on('connection', function(ws) {
       console.log("Reply: ", replyMsg);
       broadcast(replyMsg, ws._socket._handle.fd);
     });
-    // var bot = new Bot(message);
-    // if (bot.command) {
-    //   var message = bot.excuteCmd();
-    //   console.log("Reply: ", message);
-    //   broadcast(message, ws._socket._handle.fd)
-    // }
   });
 });
 
