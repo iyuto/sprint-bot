@@ -1,4 +1,5 @@
-var Todo = require('./todo.js');
+const Todo = require('./todo.js');
+const Dialogue = require('./dialogue.js');
 
 var Bot = function(message, callback) {
   if (message.match(/^(bot\b.+)/)) {
@@ -11,9 +12,10 @@ var Bot = function(message, callback) {
       callback("pong");
       break
     case "todo":
-      Todo(args, function(message){
-        callback(message);
-      });
+      Todo(args, callback);
+      break
+    case "talk":
+      Dialogue(args, callback);
       break
     default:
       callback();

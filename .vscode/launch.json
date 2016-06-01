@@ -15,7 +15,8 @@
                 "--nolazy"
             ],
             "env": {
-                "NODE_ENV": "development"
+                "NODE_ENV": "development",
+                "NODE_DIALOGUE_APIKEY": "6f504d783949476841674463764264494f65795a344c70612f6a2e77502f59586f675a554f715a725a4b41"
             },
             "externalConsole": false,
             "sourceMaps": false,

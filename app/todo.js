@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/todo'
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/bot'
 mongoose.connect(mongoURI, function(err) {
 	if (err) console.log("mongoose connection error: ", err);
 	else console.log("mongoose connection success");
