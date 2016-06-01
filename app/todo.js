@@ -19,22 +19,16 @@ var Todo = function(data, callback) { //data could be empty array
 		
 	switch (this.name) {
 		case "add":
-			addTask(this.args, function(replyMsg) {
-				callback(replyMsg);
-			});
+			addTask(this.args, callback);
 			break
 		case "delete":
-			deleteTask(this.args, function(replyMsg){
-				callback(replyMsg);
-			})
+			deleteTask(this.args, callback);
 			break
 		case "list":
-			listTask(this.args, function(replyMsg){
-				callback(replyMsg);
-			})
+			listTask(this.args, callback);
 			break
 		default:
-			callback("todoコマンドの引数が違います");
+			argsError("Todo", callback);
 	}
 }
 
@@ -42,9 +36,8 @@ module.exports = Todo;
 
 function addTask(args, callback) {
 	if (args.length < 2) {
-		argsError("add", function(message) {
-			callback(message);
-		});
+		argsError("add", callback);
+		return
 	}
 	var task = new Task();
 	task.title = args[0];
@@ -57,9 +50,8 @@ function addTask(args, callback) {
 
 function deleteTask(args, callback) {
 	if (args.length != 1) {
-		argsError("delete", function(message) {
-			callback(message);
-		});
+		argsError("delete", callback);
+		return
 	}
 	
 	Task.findOne({title: args[0]}, function(err, task) {
@@ -78,7 +70,10 @@ function deleteTask(args, callback) {
 }
 
 function listTask(args, callback) {
-	if (args.length != 0) callback();
+	if (args.length != 0) {
+		argsError("list", callback);
+		return
+	}
 	Task.find({}, function(err, docs) {
 		if(!err) {
 			if (docs.length == 0) callback("todo empty")
@@ -94,6 +89,6 @@ function listTask(args, callback) {
 }
 
 //todo: ここで引数helpを出す
-function argsError(name) {
-	return "Error: " + name
+function argsError(name, callback) {
+	callback("argsError: " + name);
 }
