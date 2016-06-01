@@ -6,6 +6,7 @@ var Bot = function(message) {
   if (message.match(/^(bot\b.+)/)) {
     this.command = message.split(" ")[1];
     this.args = message.split(" ").slice(2);
+    console.log("this.args: ", this.args);
   }
 }
 
