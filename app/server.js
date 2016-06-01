@@ -1,13 +1,11 @@
-var Bot = require('./bot.js');
-
-var
-  server = require('http').createServer(),
-  express = require('express'),
-  app = express(),
-  port = process.env.PORT || 3000;
-var
-  WebSocketServer = require('ws').Server,
-  wss = new WebSocketServer({ server: server });
+const Bot = require('./bot.js')
+const request = require('request')
+const server = require('http').createServer()
+const express = require('express')
+const app = express()
+const port = process.env.PORT || 3000;
+const WebSocketServer = require('ws').Server
+const wss = new WebSocketServer({ server: server })
 
 app.use(express.static('app'));
 
@@ -20,7 +18,7 @@ wss.on('connection', function(ws) {
     wss.clients = wss.clients.filter(function (conn, i) {
       return (conn === ws) ? false : true;
     });
-    broadcast(ws._socket._handle.fd + "が退出しました", "host");
+    broadcast("1名退出しました", "host");
   });
   ws.on('message', function (message) {
     broadcast(message, ws._socket._handle.fd);
