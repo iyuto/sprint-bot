@@ -12,61 +12,73 @@ var TaskScheme = new mongoose.Schema({
 });
 var Task = mongoose.model('Todo', TaskScheme);
 
-
 var Todo = function(data, callback) { //data could be empty array
 	this.name = data[0] //operation name
 	this.args = data.slice(1); //other arguments
 	console.log("Todo: ", this.name, this.args);
-	var replyMsg = ""
-	
+		
 	switch (this.name) {
 		case "add":
 			addTask(this.args, function(replyMsg) {
 				callback(replyMsg);
 			});
-			break;
+			break
 		case "delete":
 			deleteTask(this.args, function(replyMsg){
 				callback(replyMsg);
 			})
-			break;
+			break
 		case "list":
 			listTask(this.args, function(replyMsg){
 				callback(replyMsg);
 			})
-			break;
+			break
 		default:
 			callback("todoコマンドの引数が違います");
 	}
 }
 
-//todo: ここで引数helpを出す
-function argsError(name) {
-	return "Error: " + name
-}
+module.exports = Todo;
 
 function addTask(args, callback) {
-	if (args.length < 2) callback();
-	
+	if (args.length < 2) {
+		argsError("add", function(message) {
+			callback(message);
+		});
+	}
 	var task = new Task();
 	task.title = args[0];
 	task.description = args.slice(1).join(" ");
 	task.save(function(err) {
-	  if (err) { console.log(err); }
-	  else { console.log("task add success")}
+	  if (err) { callback(err.name); }
+	  else { callback("task added."); }
 	});
-	
-	callback("task added.");
 }
 
 function deleteTask(args, callback) {
-	if (args.length != 1) callback();
-	else callabck("deleteTask was called:");
+	if (args.length != 1) {
+		argsError("delete", function(message) {
+			callback(message);
+		});
+	}
+	
+	Task.findOne({title: args[0]}, function(err, task) {
+		if (!err && task) {
+			task.remove(function(err) {
+				if (!err) {
+					callback("task deleted.")
+				} else {
+					callback("mongoose delete error: " + err.name)
+				}
+			});
+		} else {
+			callback("todo not found: " + args[0])
+		}
+	});
 }
 
 function listTask(args, callback) {
 	if (args.length != 0) callback();
-	console.log("listTask was called");
 	Task.find({}, function(err, docs) {
 		if(!err) {
 			if (docs.length == 0) callback("todo empty")
@@ -76,10 +88,12 @@ function listTask(args, callback) {
 			}
 			callback(message);
 		} else {
-			callback("mongoose find error:", err);
+			callback("mongoose find error:" + err.name);
 		}
 	});
 }
 
-
-module.exports = Todo;
+//todo: ここで引数helpを出す
+function argsError(name) {
+	return "Error: " + name
+}

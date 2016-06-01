@@ -9,15 +9,15 @@ var Bot = function(message, callback) {
   switch (command) {
     case "ping":
       callback("pong");
-      break;
+      break
     case "todo":
       Todo(args, function(message){
         callback(message);
       });
-      break;
+      break
     default:
       callback();
-      break;
+      break
   }
 }
 
