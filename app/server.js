@@ -4,7 +4,7 @@ var
   server = require('http').createServer(),
   express = require('express'),
   app = express(),
-  port = 3000;
+  port = process.env.PORT || 3000;
 var
   WebSocketServer = require('ws').Server,
   wss = new WebSocketServer({ server: server });
