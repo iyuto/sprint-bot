@@ -23,10 +23,16 @@ wss.on('connection', function(ws) {
   });
   ws.on('message', function (message) {
     broadcast(message, ws._socket._handle.fd);
-    var bot = new Bot(message);
-    if (bot.command) {
-      broadcast(bot.excuteCmd(), ws._socket._handle.fd)
-    }
+    Bot(message, function(replyMsg){
+      console.log("Reply: ", replyMsg);
+      broadcast(replyMsg, ws._socket._handle.fd);
+    });
+    // var bot = new Bot(message);
+    // if (bot.command) {
+    //   var message = bot.excuteCmd();
+    //   console.log("Reply: ", message);
+    //   broadcast(message, ws._socket._handle.fd)
+    // }
   });
 });
 

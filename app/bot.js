@@ -1,24 +1,23 @@
 var Todo = require('./todo.js');
 
-var Bot = function(message) {
-  this.message = message;
-  
+var Bot = function(message, callback) {
   if (message.match(/^(bot\b.+)/)) {
-    this.command = message.split(" ")[1];
-    this.args = message.split(" ").slice(2);
-    console.log("this.args: ", this.args);
+    var command = message.split(" ")[1];
+    var args = message.split(" ").slice(2); //could be empty
   }
-}
-
-Bot.prototype.excuteCmd = function() {
-  switch (this.command) {
+  
+  switch (command) {
     case "ping":
-      return "pong";
+      callback("pong");
+      break;
     case "todo":
-      var todo = new Todo(this.args);
-      return todo.excuteCmd();
+      Todo(args, function(message){
+        callback(message);
+      });
+      break;
     default:
-      return null;
+      callback();
+      break;
   }
 }
 

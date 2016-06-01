@@ -12,56 +12,73 @@ var TaskScheme = new mongoose.Schema({
 });
 var Task = mongoose.model('Todo', TaskScheme);
 
-var Todo = function(data) {
-	this.name = data.split(" ")[0] //operation name
-	this.args = data.split(" ").slice(1); //other arguments
-	console.log("Todo: ", this.name, this.args);
-}
 
-Todo.prototype.excuteCmd = function() {
+var Todo = function(data, callback) { //data could be empty array
+	this.name = data[0] //operation name
+	this.args = data.slice(1); //other arguments
+	console.log("Todo: ", this.name, this.args);
+	var replyMsg = ""
+	
 	switch (this.name) {
 		case "add":
-			if (this.args.length >= 2) return addTask(this.args);
-			else return argsError(this.name)
+			addTask(this.args, function(replyMsg) {
+				callback(replyMsg);
+			});
+			break;
 		case "delete":
-			if (this.args.length == 1) return deleteTask(this.args)
-			else return argsError(this.name)
+			deleteTask(this.args, function(replyMsg){
+				callback(replyMsg);
+			})
+			break;
 		case "list":
-			if (this.args.length == 0) return listTask()
-			else return argsError(this.name)
+			listTask(this.args, function(replyMsg){
+				callback(replyMsg);
+			})
+			break;
 		default:
-			return "todoコマンドの書式が違います"
+			callback("todoコマンドの引数が違います");
 	}
 }
 
+//todo: ここで引数helpを出す
 function argsError(name) {
 	return "Error: " + name
 }
 
-function addTask(args) {
-	
+function addTask(args, callback) {
+	if (args.length < 2) callback();
 	
 	var task = new Task();
-	task.title = args[1];
-	task.description = args.join(" ");
+	task.title = args[0];
+	task.description = args.slice(1).join(" ");
 	task.save(function(err) {
 	  if (err) { console.log(err); }
 	  else { console.log("task add success")}
 	});
 	
-	return "task added."
+	callback("task added.");
 }
 
-function deleteTask(args) {
-	console.log("deleteTask was called")
-	console.log(args)
-	return null;
+function deleteTask(args, callback) {
+	if (args.length != 1) callback();
+	else callabck("deleteTask was called:");
 }
 
-function listTask() {
-	console.log("listTask was called")
-	console.log(args)
-	return null;
+function listTask(args, callback) {
+	if (args.length != 0) callback();
+	console.log("listTask was called");
+	Task.find({}, function(err, docs) {
+		if(!err) {
+			if (docs.length == 0) callback("todo empty")
+			else var message = ""
+			for(var i=0; i<docs.length; i++) {
+					message += docs[i].title + ": " + docs[i].description + "\n"
+			}
+			callback(message);
+		} else {
+			callback("mongoose find error:", err);
+		}
+	});
 }
 
 
