@@ -1,5 +1,5 @@
-const Todo = require('./todo.js');
-const Dialogue = require('./dialogue.js');
+const Todo = require('./command/todo.js');
+const Dialogue = require('./command/dialogue.js');
 
 var Bot = function(message, callback) {
   if (message.match(/^(bot\b.+)/)) {
