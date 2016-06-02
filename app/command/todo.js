@@ -44,7 +44,7 @@ function addTask(args, callback) {
 	task.description = args.slice(1).join(" ");
 	task.save(function(err) {
 	  if (err) { callback(err.name); }
-	  else { callback("task added."); }
+	  else { callback("todo added"); }
 	});
 }
 
@@ -58,7 +58,7 @@ function deleteTask(args, callback) {
 		if (!err && task) {
 			task.remove(function(err) {
 				if (!err) {
-					callback("task deleted.")
+					callback("todo deleted")
 				} else {
 					callback("mongoose delete error: " + err.name)
 				}
