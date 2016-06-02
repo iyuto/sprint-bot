@@ -1,6 +1,7 @@
 const Todo = require('./command/todo.js');
 const Dialogue = require('./command/dialogue.js');
 const Fitbit = require('./command/fitbit.js');
+const Lastfm = require('./command/lastfm.js');
 
 var Bot = function(message, callback) {
   if (message.match(/^(bot\b.+)/)) {
@@ -20,6 +21,9 @@ var Bot = function(message, callback) {
       break
     case "fit":
       Fitbit(args, callback);
+      break
+    case "song":
+      Lastfm(args, callback);
       break
     default:
       callback();
