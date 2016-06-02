@@ -21,6 +21,19 @@ function Fitbit(args, callback) {
 		this.expireTime = expireTime;
 		console.log("Fitbit getToken done.");
 		
+		switch (args[0]) {
+			case "heart":
+				getHeartRate(this.client, this.accessToken, callback);
+				break
+			case "step":
+				getStep(this.client, this.accessToken, callback);
+				break
+			case "profile":
+				getProfile(this.client, this.accessToken, callback);
+				break
+			default:
+				argsError("Fitbit", callback);
+		}
 	});
 }
 
@@ -71,20 +84,46 @@ function saveToken(accessToken, refreshToken, expiresIn) {
 	});
 }
 
-function getHeart() {
-	this.client.get("/activities/heart/date/today/1d/1min.json", this.accessToken).then(function (results) {
-		console.log(results);
+function getHeartRate(client, accessToken, callback) {
+	client.get("/activities/heart/date/today/1d/1min.json", accessToken).then(function (results) {
+		if (results[0]["activities-heart-intraday"].dataset.length == 0) {
+			console.log(resutls[0])
+			callback("There is no synced-data today.");
+		} else {
+			console.log(results[0]);
+			callback("My latest heart-rate: ♡" + results[0]["activities-heart-intraday"].dataset.pop().value);
+		}
 	}).catch(function (err) {
-		console.log(err);
+		console.log("Fitbit getHeartRate Error.");
 	});
 }
 
-function getProfile() {
-	this.client.get("/profile.json", this.accessToken).then(function (results) {
-		console.log(results);
+function getStep(client, accessToken, callback) {
+	client.get("/activities/tracker/steps/date/today/1d.json", accessToken).then(function (results) {
+		if (results[0]["activities-tracker-steps"].length == 0) {
+			console.log(results[0]);
+			callback("There is no synced-data today.");
+		} else {
+			console.log(results[0]);
+			callback("Todays my steps: " + results[0]["activities-tracker-steps"].pop().value);
+		}
 	}).catch(function (err) {
-		console.log(err);
+		console.log("Fitbit getStep Error:" + err);
 	});
+}
+
+
+function getProfile(client, accessToken, callback) {
+	client.get("/profile.json", accessToken).then(function (results) {
+		console.log(results[0]);
+	}).catch(function (err) {
+		console.log("Fitbit getProfile Error.");
+	});
+}
+
+//todo: ここで引数helpを出す
+function argsError(name, callback) {
+	callback("argsError: " + name);
 }
 
 module.exports = Fitbit;
