@@ -87,10 +87,8 @@ function saveToken(accessToken, refreshToken, expiresIn) {
 function getHeartRate(client, accessToken, callback) {
 	client.get("/activities/heart/date/today/1d/1min.json", accessToken).then(function (results) {
 		if (results[0]["activities-heart-intraday"].dataset.length == 0) {
-			console.log(resutls[0])
 			callback("There is no synced-data today.");
 		} else {
-			console.log(results[0]);
 			callback("My latest heart-rate: ♡" + results[0]["activities-heart-intraday"].dataset.pop().value);
 		}
 	}).catch(function (err) {
@@ -101,10 +99,8 @@ function getHeartRate(client, accessToken, callback) {
 function getStep(client, accessToken, callback) {
 	client.get("/activities/tracker/steps/date/today/1d.json", accessToken).then(function (results) {
 		if (results[0]["activities-tracker-steps"].length == 0) {
-			console.log(results[0]);
 			callback("There is no synced-data today.");
 		} else {
-			console.log(results[0]);
 			callback("Todays my steps: " + results[0]["activities-tracker-steps"].pop().value);
 		}
 	}).catch(function (err) {
