@@ -2,8 +2,6 @@ const request = require('request');
 const mongoose = require('mongoose');
 
 const DOCOMO_DIALOGUE_URL = "https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY=" + process.env.NODE_DIALOGUE_APIKEY;
-const header = {'Content-Type':'application/json'};
-
 const DialogueScheme = new mongoose.Schema({
 	context: {type: String, require: true, unique: true},
 	id: {type: Number, require: true, unique: true}
