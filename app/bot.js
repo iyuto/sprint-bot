@@ -19,10 +19,7 @@ var Bot = function(message, callback) {
       Dialogue(args, callback);
       break
     case "fit":
-      var fitbit = new Fitbit();
-      fitbit.getToken(function() {
-        fitbit.getProfile();
-      });
+      Fitbit(args, callback);
       break
     default:
       callback();

@@ -13,36 +13,57 @@ const TokenScheme = new mongoose.Schema({
 });
 var Token = mongoose.model('Token', TokenScheme);
 
-function Fitbit() {
+function Fitbit(args, callback) {
 	this.client = new FitbitApiClient(FITBIT_CLIENT_ID, FITBIT_CLIENT_SECRET);
-	// var redirect_uri = this.client.getAuthorizeUrl("activity heartrate profile settings sleep", CALLBACK_URL);
-	// console.log("fitbit authorize callbacked: ", redirect_uri);
-	// this.client.getAccessToken(FITBIT_CODE, CALLBACK_URL).then(function (result) {
-	// 	console.log(result);
-	// }).catch(function (err) {
-	// 	console.log(err);
-	// });
+	getToken(this.client, function(accessToken, refreshToken, expireTime) {
+		this.accessToken = accessToken;
+		this.refreshToken = refreshToken;
+		this.expireTime = expireTime;
+		console.log("Fitbit getToken done.");
+		
+	});
 }
 
-Fitbit.prototype.isExpire = function (callback) {
-	if (Math.floor(Date.now()/1000) <= this.expireTime) {
-		this.client.refreshAccesstoken(this.accessToken, this.refreshToken).then(function (result) {
-			console.log("Fitbit token refreshed.");
-			this.accessToken = result.access_token;
-			this.refreshToken = result.refresh_token;
-			this.expireTime = Math.floor(Date.now()/1000) + result.expire_time;
-		}).catch(function (err) {
-			console.log(err);
-		});
-		callback();
-	} else callback();
+function getToken(client, callback) {
+	Token.findOne({title: "Fitbit"}, function(err, token) {
+		if (!err && token) {
+			if (isExpire(token.expire_time)) {
+				client.refreshAccesstoken(token.access_token, token.refresh_token).then(function (result) {
+					console.log("Fitbit token refreshed.");
+					saveToken(result.access_token, result.refresh_token, result.expires_in);
+					callback(result.access_token, result.refresh_token, Math.floor(Date.now()/1000) + result.expires_in);
+				}).catch(function (err) {
+					console.log("fitbit token refresh error.");
+				});
+			} else {
+				console.log("Fitbit getToken token is fresh.")
+				callback(token.access_token, token.refresh_token, token.expire_time);
+			}
+		} else {
+			var redirect_uri = client.getAuthorizeUrl("activity heartrate profile settings sleep", CALLBACK_URL);
+			console.log("fitbit authorize callbacked: ", redirect_uri);
+			
+			client.getAccessToken(FITBIT_CODE, CALLBACK_URL).then(function (result) {
+				console.log(result);
+				saveToken(result.access_token, result.refresh_token, result.expires_in);
+			}).catch(function (err) {
+				console.log("Fitbit getAccessToken error. Please access following URL and confirm your authorization: \n" + redirect_uri);
+				console.log("Then get code and set it as NODE_FITBIT_CODE on your ENV.")
+			});
+		}
+	});
 }
 
-Fitbit.prototype.saveToken = function (accessToken, refreshToken, expireTime) {
+function isExpire(expireTime) {
+	if (Math.floor(Date.now()/1000) >= expireTime)  return true
+	else return false
+}
+
+function saveToken(accessToken, refreshToken, expiresIn) {
  	item = {
 		access_token: accessToken,
 		refresh_token: refreshToken,
-		expire_time: expireTime
+		expire_time: Math.floor(Date.now()/1000) + expiresIn
 	}
 	Token.update({title: "Fitbit"}, item, {upsert: true}, function(err) {
 		if (!err) console.log("mongoose fitbit token saved.");
@@ -50,33 +71,20 @@ Fitbit.prototype.saveToken = function (accessToken, refreshToken, expireTime) {
 	});
 }
 
-Fitbit.prototype.getToken = function (callback) {
-	Token.findOne({title: "Fitbit"}, function(err, token) {
-		if (!err && token) {
-			this.accessToken = token.access_token;
-			this.refreshToken = token.refresh_token;
-			this.expireTime = token.refresh_token;
-			
-			this.isExpire(function (){
-				console.log("Fitbit access_token: " + this.accessToken);
-				console.log("Fitbit refresh_token: " + this.refreshToken);
-			});
-			callback();
-		} else console.log("Fitbit token not found");
-	});
-}
-
-Fitbit.prototype.getProfile = function () {
-	this.client.get("/profile.json", this.accessToken).then(function (results) {
+function getHeart() {
+	this.client.get("/activities/heart/date/today/1d/1min.json", this.accessToken).then(function (results) {
 		console.log(results);
 	}).catch(function (err) {
 		console.log(err);
 	});
 }
 
-
-
-
-
+function getProfile() {
+	this.client.get("/profile.json", this.accessToken).then(function (results) {
+		console.log(results);
+	}).catch(function (err) {
+		console.log(err);
+	});
+}
 
 module.exports = Fitbit;
