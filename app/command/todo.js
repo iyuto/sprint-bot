@@ -46,7 +46,7 @@ function addTask(args, callback) {
 	}
 	Task.update({title:args[0]}, item, {upsert: true}, function(err) {
 		if(!err) callback("todo added");
-		else callback(err.name);
+		else callback("mongoose todo update error: " + err.name);
 	});
 	// var task = new Task();
 	// task.title = args[0];
