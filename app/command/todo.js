@@ -48,13 +48,6 @@ function addTask(args, callback) {
 		if(!err) callback("todo added");
 		else callback("mongoose todo update error: " + err.name);
 	});
-	// var task = new Task();
-	// task.title = args[0];
-	// task.description = args.slice(1).join(" ");
-	// task.save(function(err) {
-	//   if (err) { callback(err.name); }
-	//   else { callback("todo added"); }
-	// });
 }
 
 function deleteTask(args, callback) {

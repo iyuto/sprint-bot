@@ -25,6 +25,9 @@ var Bot = function(message, callback) {
     case "song":
       Lastfm(args, callback);
       break
+    case "help":
+      callback("see this: https://github.com/iyuto/sprint-bot/blob/master/answer.md");
+      break
     default:
       callback();
       break
