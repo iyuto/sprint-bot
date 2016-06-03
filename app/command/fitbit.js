@@ -73,7 +73,7 @@ function isExpire(expireTime) {
 }
 
 function saveToken(accessToken, refreshToken, expiresIn) {
- 	item = {
+ 	var item = {
 		access_token: accessToken,
 		refresh_token: refreshToken,
 		expire_time: Math.floor(Date.now()/1000) + expiresIn

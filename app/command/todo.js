@@ -39,13 +39,22 @@ function addTask(args, callback) {
 		argsError("add", callback);
 		return
 	}
-	var task = new Task();
-	task.title = args[0];
-	task.description = args.slice(1).join(" ");
-	task.save(function(err) {
-	  if (err) { callback(err.name); }
-	  else { callback("todo added"); }
+	
+	var item = {
+		title: args[0],
+		description: args.slice(1).join(" ")
+	}
+	Task.update({title:args[0]}, item, {upsert: true}, function(err) {
+		if(!err) callback("todo added");
+		else callback("mongoose todo update error: " + err.name);
 	});
+	// var task = new Task();
+	// task.title = args[0];
+	// task.description = args.slice(1).join(" ");
+	// task.save(function(err) {
+	//   if (err) { callback(err.name); }
+	//   else { callback("todo added"); }
+	// });
 }
 
 function deleteTask(args, callback) {
@@ -79,7 +88,7 @@ function listTask(args, callback) {
 			if (docs.length == 0) callback("todo empty")
 			else var message = ""
 			for(var i=0; i<docs.length; i++) {
-					message += docs[i].title + ": " + docs[i].description + "\n"
+					message += docs[i].title + " " + docs[i].description + "\n"
 			}
 			callback(message);
 		} else {
