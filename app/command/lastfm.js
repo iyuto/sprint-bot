@@ -12,8 +12,7 @@ function Lastfm(args, callback) {
 	}
 	this.lfm.user.getRecentTracks(params, function(err, recentTracks) {
 		if(!err) {
-			console.log(recentTracks.track[0]);
-			callback((recentTracks.track[0]["@attr"].nowplaying ? "NowPlaying♪♪: " : "Recent Track: ") +
+			callback((recentTracks.track[0]["@attr"] ? "NowPlaying♪♪: " : "Recent Track: ") +
 				recentTracks.track[0].name +
 				" (" + recentTracks.track[0].artist["#text"] + ")"
 			);
