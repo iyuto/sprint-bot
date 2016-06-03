@@ -1,3 +1,6 @@
+# オレBot [http://orebot.herokuapp.com](http://orebot.herokuapp.com)
+
+
 ## STEP1. デプロイ情報
 - チャットボットをデプロイしたサーバーのURL
 	- [http://orebot.herokuapp.com](http://orebot.herokuapp.com)
@@ -11,48 +14,50 @@
 ## STEP3. 独自コマンドの実装
 
 ### talkコマンド `bot talk`
-docomo Developer supportで公開されている雑談対話APIを利用して、ユーザの発話テキストから自然な雑談を提供します。  
-また、過去の会話を遡って文脈を維持した会話が可能となっています。（例えば、食事の話をしていたら、それに続く会話も食事に関する返答が返ってきます）
 
 ````
 bot talk [発話テキスト]
 -> [返答テキスト]
 ````
 
+docomo Developer supportで公開されている雑談対話APIを利用して、ユーザの発話テキストから自然な雑談を提供します。  
+また、過去の会話を遡って文脈を維持した会話が可能となっています。（例えば、食事の話をしていたら、それに続く会話も食事に関する返答が返ってきます）
+
+
+
 ### fitコマンド `bot fit [option]`
-Fitbit APIを利用して、作者自身の身体的な活動情報を知ることができます。  
-私が24時間装着しているリストバンドから、心拍数・歩数の情報を提供します。
-
-- 心拍数
-
-最後に同期した際の心拍数を取得します。
-
-````
-bot fit heart`
--> My latest heart-rate: ♡[heartrate]
-````
-
-- 歩数
-
-本日の累計歩数を取得します。
 
 ````
 bot fit step
 -> Todays my steps: [steps]
+
+bot fit heart
+-> My latest heart-rate: ♡[heartrate]
 ````
 
+Fitbit APIを利用して、作者自身の身体的な活動情報を知ることができます。  
+私が24時間装着しているリストバンドから、心拍数・歩数の情報を提供します。
+
 ### songコマンド `bot song`
-Last.fm APIを利用して、作者が一番最近聞いた楽曲を知ることができます。  
-作者自身のiPhone, iTunes, Spotifyのいずれかで再生している楽曲名・アーティストの情報を提供します。
-
-- 楽曲名
-
-作者自身がリアルタイムに楽曲を再生している場合は「NowPlaying」と表示されます。
 
 ````
 bot song
 -> Recent Track: ワンダーランド (Flip)
 -> NowPlaying♪♪: ワンダーランド (Flip)
+````
+
+Last.fm APIを利用して、作者が一番最近聞いた楽曲を知ることができます。  
+作者自身のiPhone, iTunes, Spotifyのいずれかで再生している楽曲名・アーティストの情報を提供します。
+
+作者自身がリアルタイムに楽曲を再生している場合は「NowPlaying」と表示されます。
+
+
+
+### helpコマンド `bot help`
+
+````
+bot help
+-> see this: https://github.com/iyuto/sprint-bot/blob/master/answer.md
 ````
 
 ## 今回の開発に使用した技術
@@ -84,4 +89,3 @@ bot song
 
 fitコマンドでは作者が24時間着けているFitbitリストバンドの情報を見ることで、作者の身体的な活動情報が分かります。  
 songでは作者が最後に聞いた曲、もしくは今現在聞いている曲を知ることができます。
-
