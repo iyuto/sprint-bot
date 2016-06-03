@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test';
+
 var assert = require("chai").assert,
     WebSocket = require('ws'),
     setWsProtocol = require('./utils').setWsProtocol,
@@ -6,7 +8,7 @@ var assert = require("chai").assert,
 describe("Chat Server",function() {
 
   var responseMessageCount = 0;
-  it('Should send back pong', function(done) { 
+  it('Should send back pong', function(done) {
     var client1 = new WebSocket(setWsProtocol(host_url));
 
     client1.onopen = function() {
@@ -20,7 +22,7 @@ describe("Chat Server",function() {
         assert.equal(returnObject.data, "bot ping");
       }
       else if(responseMessageCount === 2) {
-        assert.equal(returnObject.data, "pong"); 
+        assert.equal(returnObject.data, "pong");
         client1.close();
         done();
       }
