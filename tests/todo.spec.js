@@ -1,5 +1,7 @@
 'user strict';
 
+process.env.NODE_ENV = 'test';
+
 var assert = require('chai').assert,
     WebSocket = require('ws'),
     setWsProtocol = require('./utils').setWsProtocol,
@@ -34,7 +36,7 @@ describe('Bot todo', function() {
 
     var deleteCommandList = [];
 
-    //Please note that for tests to pass you have to implement the `bot todo delete` and `bot todo list` command 
+    //Please note that for tests to pass you have to implement the `bot todo delete` and `bot todo list` command
     //num1 is incremented while sending the bot todo command and num2 is incremented while receiving the response
     tempClient.onopen = function() {
       tempClient.send("bot todo list");
@@ -47,7 +49,7 @@ describe('Bot todo', function() {
         else if(num2 === 2) {
           if(returnObject.data === "todo empty"){
             tempClient.close();
-            done(); 
+            done();
           }
           else if(returnObject.data.split('\n').length > 0){
             deleteCommandList = returnObject.data.split('\n');
@@ -71,7 +73,7 @@ describe('Bot todo', function() {
     var commandToAdd = "bot todo add check1 add1";
 
     client1.onopen = function() {
-      client1.send(commandToAdd);      
+      client1.send(commandToAdd);
       client1.onmessage = function(msg) {
         responseMessageCount++;
         if(responseMessageCount === 1) {
@@ -84,7 +86,7 @@ describe('Bot todo', function() {
           client1.close();
           done();
         }
-      }; 
+      };
     };
   });
 
@@ -92,7 +94,7 @@ describe('Bot todo', function() {
     var client1 = new WebSocket(setWsProtocol(host_url));
 
     client1.onopen = function() {
-      client1.send("bot todo add " + forAdd[0].command + " " + forAdd[0].data);      
+      client1.send("bot todo add " + forAdd[0].command + " " + forAdd[0].data);
       client1.onmessage = function(msg) {
         var returnObject = JSON.parse(msg.data);
         if(returnObject.data === "todo added") {

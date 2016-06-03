@@ -6,6 +6,8 @@ const app = express()
 const port = process.env.PORT || 3000;
 const WebSocketServer = require('ws').Server
 const wss = new WebSocketServer({ server: server })
+const env =  process.env.NODE_ENV;
+console.log("Run in: ", env);
 
 app.use(express.static('app'));
 
@@ -17,7 +19,7 @@ var userID = [];
 
 wss.on('connection', function(ws) {
   userID.push({id:ws._socket._handle.fd, name:ws._socket._handle.fd});
-  broadcast(ws._socket._handle.fd + "が参加しました. 現在の参加人数:" + wss.clients.length, "host");
+  if (env != "test") broadcast(ws._socket._handle.fd + "が参加しました. 現在の参加人数:" + wss.clients.length, "host");
   
   ws.on('close', function() {
     var fd = wss.clients.map(function(client) {
@@ -25,7 +27,7 @@ wss.on('connection', function(ws) {
     });
     userID = userID.filter(function(user) {
       if (fd.indexOf(user.id) == -1) {
-        broadcast(user.name + "が退出しました. 現在の参加人数:" + wss.clients.length, "host");
+        if (env != "test") broadcast(user.name + "が退出しました. 現在の参加人数:" + wss.clients.length, "host");
         return false
       } else {
         return true
