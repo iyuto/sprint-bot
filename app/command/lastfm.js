@@ -12,10 +12,14 @@ function Lastfm(args, callback) {
 	}
 	this.lfm.user.getRecentTracks(params, function(err, recentTracks) {
 		if(!err) {
-			callback((recentTracks.track[0]["@attr"] ? "NowPlaying♪♪: " : "Recent Track: ") +
+			var d = new Date();
+			d.setTime(recentTracks.track[0].date.uts * 1000);
+			var dStr = (d.getMonth()+1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + " -> "
+			callback((recentTracks.track[0]["@attr"] ? "NowPlaying♪♪ -> " : dStr) +
 				recentTracks.track[0].name +
 				" (" + recentTracks.track[0].artist["#text"] + ")"
 			);
+
 		} else console.log("Last.fm getRecentTracks Error" + err);
 	});
 }

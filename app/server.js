@@ -15,29 +15,28 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-var userID = [];
+global.userID = {};
 
 wss.on('connection', function(ws) {
-  userID.push({id:ws._socket._handle.fd, name:ws._socket._handle.fd});
+  userID[ws._socket._handle.fd] = ws._socket._handle.fd;
+  //userID.push({id:ws._socket._handle.fd, name:ws._socket._handle.fd});
   if (env != "test") broadcast(ws._socket._handle.fd + "が参加しました. 現在の参加人数:" + wss.clients.length, "host");
   
   ws.on('close', function() {
     var fd = wss.clients.map(function(client) {
       return client._socket._handle.fd;
     });
-    userID = userID.filter(function(user) {
-      if (fd.indexOf(user.id) == -1) {
-        if (env != "test") broadcast(user.name + "が退出しました. 現在の参加人数:" + wss.clients.length, "host");
-        return false
-      } else {
-        return true
+    Object.keys(userID).forEach(function(key) {
+      if (fd.indexOf(Number(key)) == -1) {
+        if (env != "test") broadcast(userID[key] + "が退出しました. 現在の参加人数:" + wss.clients.length, "host");
+        delete userID[key];
       }
     });
   });
   ws.on('message', function (message) {
-    broadcast(message, ws._socket._handle.fd);
-    Bot(message, function(replyMsg){
-      broadcast(replyMsg, ws._socket._handle.fd);
+    broadcast(message, userID[ws._socket._handle.fd]);
+    Bot(message, ws._socket._handle.fd, function(replyMsg){
+      broadcast(replyMsg, userID[ws._socket._handle.fd]);
     });
   });
 });

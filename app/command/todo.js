@@ -92,5 +92,5 @@ function listTask(args, callback) {
 
 //todo: ここで引数helpを出す
 function argsError(name, callback) {
-	callback("argsError: " + name);
+	callback("argument error: " + name);
 }

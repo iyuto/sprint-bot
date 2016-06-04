@@ -52,7 +52,7 @@ function getToken(client, callback) {
 				console.log("Fitbit getToken token is fresh.")
 				callback(token.access_token, token.refresh_token, token.expire_time);
 			}
-		} else {
+		} else { //if it's first access, needs to set a environment variable manually.
 			var redirect_uri = client.getAuthorizeUrl("activity heartrate profile settings sleep", CALLBACK_URL);
 			console.log("fitbit authorize callbacked: ", redirect_uri);
 			
@@ -119,7 +119,7 @@ function getProfile(client, accessToken, callback) {
 
 //todo: ここで引数helpを出す
 function argsError(name, callback) {
-	callback("argsError: " + name);
+	callback("argument error: " + name);
 }
 
 module.exports = Fitbit;

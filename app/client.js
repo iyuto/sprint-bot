@@ -15,7 +15,7 @@ $(function () {
   });
   ws.onmessage = function(msg){
     var returnObject = JSON.parse(msg.data);
-    $('#messages').append($('<li>')).append($('<span id="clientId">').text(returnObject.id)).append($('<span id="clientMessage">').text(returnObject.data));
+    $('#messages').append($('<li>').append($('<span class="clientId">').text(returnObject.id + ": ")).append($('<span class="clientMessage">').text(returnObject.data)));
   };
   ws.onerror = function(err){
     console.log("err", err);

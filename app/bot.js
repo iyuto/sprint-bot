@@ -3,7 +3,7 @@ const Dialogue = require('./command/dialogue.js');
 const Fitbit = require('./command/fitbit.js');
 const Lastfm = require('./command/lastfm.js');
 
-var Bot = function(message, callback) {
+var Bot = function(message, id, callback) {
   if (message.match(/^(bot\b.+)/)) {
     var command = message.split(" ")[1];
     var args = message.split(" ").slice(2); //could be empty
@@ -27,6 +27,12 @@ var Bot = function(message, callback) {
       break
     case "help":
       callback("see this: https://github.com/iyuto/sprint-bot/blob/master/answer.md");
+      break
+    case "name":
+      if (args.length > 0) {
+        userID[id] = args.join(" ");
+        callback(id + "が名前を[" + userID[id] + "]に変更しました。")
+      }
       break
     default:
       callback();
