@@ -6,6 +6,10 @@
 	- [http://orebot.herokuapp.com](http://orebot.herokuapp.com)
 - デプロイに使ったサービス
 	- heroku
+- デプロイ状況
+	- heroku上にはdevelopブランチがデプロイされています
+	- codecheckのレビューにはmasterブランチを見てください
+	- developブランチはcodecheck提出後にも修正が加えてあります
 
 ## STEP2. 必須機能の実装
 - コマンドの第一引数をBotモジュールで処理をして、それ以降の引数は各コマンドのモジュールに引き渡す構造にすることで、コマンドの追加・拡張をしやすい設計を心がけた
