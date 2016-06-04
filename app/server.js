@@ -18,7 +18,7 @@ app.get('/', function(req, res){
 global.userID = {};
 
 wss.on('connection', function(ws) {
-  userID[ws._socket._handle.fd] = ws._socket._handle.fd;
+  userID[ws._socket._handle.fd] = "Guest" + ws._socket._handle.fd;
   //userID.push({id:ws._socket._handle.fd, name:ws._socket._handle.fd});
   if (env != "test") broadcast(ws._socket._handle.fd + "が参加しました. 現在の参加人数:" + wss.clients.length, "host");
   

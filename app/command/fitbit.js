@@ -28,8 +28,8 @@ function Fitbit(args, callback) {
 			case "step":
 				getStep(this.client, this.accessToken, callback);
 				break
-			case "profile":
-				getProfile(this.client, this.accessToken, callback);
+			case "sleep":
+				getSleep(this.client, this.accessToken, callback);
 				break
 			default:
 				argsError("Fitbit", callback);
@@ -101,21 +101,51 @@ function getStep(client, accessToken, callback) {
 		if (results[0]["activities-tracker-steps"].length == 0) {
 			callback("There is no synced-data today.");
 		} else {
-			callback("Todays my steps: " + results[0]["activities-tracker-steps"].pop().value);
+			callback("Today's my steps: " + results[0]["activities-tracker-steps"].pop().value);
 		}
 	}).catch(function (err) {
 		console.log("Fitbit getStep Error:" + err);
 	});
 }
 
-
-function getProfile(client, accessToken, callback) {
-	client.get("/profile.json", accessToken).then(function (results) {
-		console.log(results[0]);
+function getSleep(client, accessToken, callback) {
+	client.get("/sleep/date/today.json", accessToken).then(function (results) {
+		results[0]["sleep"].forEach(function(data){
+			if (data.isMainSleep) {
+				console.log("Fitbit got main sleep: " + data.minuteData.length);
+				var sleepStr = "";
+				for (var i=0; i < data.minuteData.length; i++) {
+					switch (data.minuteData[i].value) {
+						case "1":
+							sleepStr += "|";
+							break
+						case "2":
+							sleepStr += ":";
+							break
+						case "3":
+							sleepStr += ".";
+							break
+						default:
+							break
+					}
+				}
+				callback("Last night's sleep:" + sleepStr);
+			} else {
+				callback("There is no sleep-data last night.");
+			}
+		});
 	}).catch(function (err) {
-		console.log("Fitbit getProfile Error.");
+		console.log("Fitbit getSleep Error:" + err);
 	});
 }
+
+// function getProfile(client, accessToken, callback) {
+// 	client.get("/profile.json", accessToken).then(function (results) {
+// 		console.log(results[0]);
+// 	}).catch(function (err) {
+// 		console.log("Fitbit getProfile Error.");
+// 	});
+// }
 
 //todo: ここで引数helpを出す
 function argsError(name, callback) {

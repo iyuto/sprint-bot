@@ -30,8 +30,9 @@ var Bot = function(message, id, callback) {
       break
     case "name":
       if (args.length > 0) {
+        prevName = userID[id];
         userID[id] = args.join(" ");
-        callback(id + "が名前を[" + userID[id] + "]に変更しました。")
+        callback(prevName + "が名前を[" + userID[id] + "]に変更しました。")
       }
       break
     default:
